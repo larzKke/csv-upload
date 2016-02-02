@@ -1,0 +1,18 @@
+{
+  "name": "csv",
+  "version": "1.0.0",
+  "description": "csv uploader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lk",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.4",
+    "fast-csv": "^1.0.0",
+    "multer": "^1.1.0",
+    "util": "^0.10.3"
+  }
+}
