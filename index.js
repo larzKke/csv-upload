@@ -11,8 +11,6 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://localhost:27017/color25';
 
-
-
 var upload = multer({ dest: 'uploads/' })
 
 
@@ -25,32 +23,30 @@ app.post('/upload', upload.single('file'),function(req, res, next) {
     
     if (req.file) {
             
-/*            var insertDocument = function(db, callback) {
-                db.collection('guests').insertOne( data , function(err, result) {
-                    assert.equal(err, null);
-                    console.log("Inserted a document into the guests collection.");
-                    callback(result);
-                    });
-            };
-
-            MongoClient.connect(url, function(err, db) {
-                    assert.equal(null, err);
-                    insertDocument(db, function() {
-                        db.close();
-                });
-            });
-            */
-            
-            //var stream = fs.createReadStream(req.file.path);
+            var dataResult = [];
             
             csv
             .fromPath(req.file.path, {headers : true, objectMode: true})
             .on('data', function(data){
-                    console.log(data);
+                dataResult.push(data);
             })
             .on('end', function(){
-                console.log('done');
-                res.end('Done!');
+                
+                var insertDocument = function(db, callback) {
+                    db.collection('guests').insertMany( dataResult , function(err, result) {
+                        assert.equal(err, null);
+                        console.log("Inserted documents into the guests collection.");
+                        callback(result);
+                    });
+                };
+
+                MongoClient.connect(url, function(err, db) {
+                        assert.equal(null, err);
+                        insertDocument(db, function() {
+                            db.close();
+                    });
+                });
+                res.json(dataResult);
             });
             
     } else {
